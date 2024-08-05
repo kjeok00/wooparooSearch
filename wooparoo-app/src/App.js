@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import './App.css';
 
-const csvFilePath = '/Sorted_Wooparoo_Data.csv';
+const originalCsvFilePath = '/Original_sortedWooparooData.csv';
+const luckyCsvFilePath = '/Lucky_sortedWooparooData.csv';
 
 function App() {
   const [data, setData] = useState([]);
@@ -10,11 +11,18 @@ function App() {
   const [right, setRight] = useState('');
   const [results, setResults] = useState([]);
   const [message, setMessage] = useState('');
+  const [isLucky, setIsLucky] = useState(false); // 추가된 상태
 
   useEffect(() => {
     // Fetch and parse the CSV file
+    const csvFilePath = isLucky ? luckyCsvFilePath : originalCsvFilePath;
     fetch(csvFilePath)
-      .then(response => response.text())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
+        return response.text();
+      })
       .then(csvText => {
         Papa.parse(csvText, {
           header: true,
@@ -22,8 +30,11 @@ function App() {
             setData(result.data);
           }
         });
+      })
+      .catch(error => {
+        console.error('Error fetching the CSV file:', error);
       });
-  }, []);
+  }, [isLucky]); // isLucky 상태가 변경될 때마다 실행
 
   const handleSearch = () => {
     console.log('버튼이 클릭되었습니다.');
@@ -46,8 +57,10 @@ function App() {
     } else {
       const filteredResults = data.filter(row => row.Left === left && row.Right === right);
       if (filteredResults.length > 0) {
+        // Probability 기준으로 내림차순 정렬
+        filteredResults.sort((a, b) => parseFloat(b.Probability) - parseFloat(a.Probability));
         setResults(filteredResults);
-        setMessage('정상 입력되었습니다.');
+        setMessage('');
         console.log('정상 입력되었습니다.');
       } else {
         setMessage('에러: CSV 파일에 해당 조합이 없습니다.');
@@ -57,29 +70,43 @@ function App() {
     }
   };
 
+  const toggleLucky = () => {
+    setIsLucky(!isLucky);
+    setResults([]); // 결과 값을 초기화
+    setMessage(''); // 메시지 초기화
+  };
+
   return (
     <div className="App">
-      <h1>Wooparoo Probability Finder</h1>
+      <div className="header">
+        <h1>우파루 크로스 확률 검색기</h1>
+        <div className="made-by">made by jeok K</div>
+      </div>
+      <div>
+        <p>현재 상태: {isLucky ? 'Lucky' : 'Original'}</p>
+        <button onClick={toggleLucky}>
+          {isLucky ? 'Switch to Original' : 'Switch to Lucky'}
+        </button>
+      </div>
       <div>
         <label>
-          Left:
+          왼쪽 우파루  
           <input type="text" value={left} onChange={(e) => setLeft(e.target.value)} />
         </label>
         <label>
-          Right:
+          오른쪽 우파루
           <input type="text" value={right} onChange={(e) => setRight(e.target.value)} />
         </label>
         <button onClick={handleSearch}>Search</button>
       </div>
       <div>
-        <h2>Results</h2>
         {message && <p>{message}</p>}
         {results.length > 0 && (
           <table>
             <thead>
               <tr>
-                <th>Wooparoo</th>
-                <th>Probability</th>
+                <th>결과 우파루</th>
+                <th>확률(%)</th>
               </tr>
             </thead>
             <tbody>
