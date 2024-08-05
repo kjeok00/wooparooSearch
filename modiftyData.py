@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 
-# CSV ÆÄÀÏ ÀĞ±â (utf-8-sig ÀÎÄÚµù)
-df = pd.read_csv('incoding_data111.csv', header=None, encoding='utf-8-sig')
+# CSV íŒŒì¼ ì½ê¸° (utf-8 ì¸ì½”ë”©)
+df = pd.read_csv('utf8_encoded_wooparooData.csv', header=None, encoding='utf-8')
 
-# »õ·Î¿î µ¥ÀÌÅÍ¸¦ ÀúÀåÇÒ ¸®½ºÆ®
+# ìƒˆë¡œìš´ ë°ì´í„°ë¥¼ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸
 new_data = []
 
-# ÇöÀç "°á°ú¿ìÆÄ·ç"¸¦ ÀúÀåÇÒ º¯¼ö
+# í˜„ì¬ "ê²°ê³¼ìš°íŒŒë£¨"ë¥¼ ì €ì¥í•  ë³€ìˆ˜
 current_result_wooparoo = ""
 
-# µ¥ÀÌÅÍ¸¦ ¼øÈ¸ÇÏ¸ç ¼öÁ¤
+# ë°ì´í„°ë¥¼ ìˆœíšŒí•˜ë©° ìˆ˜ì •
 for index, row in df.iterrows():
-    if len(row) == 3 and "È®·ü" in row[2]:  # "È®·ü"ÀÌ Æ÷ÇÔµÈ Çà È®ÀÎ
-        current_result_wooparoo = row[2].split()[-2]  # "°á°ú¿ìÆÄ·ç" ÃßÃâ
-        new_data.append(row)  # Á¦¸ñ ÇàÀ» ±×´ë·Î Ãß°¡
+    if len(row) == 3 and "í™•ë¥ " in row[2]:  # "í™•ë¥ "ì´ í¬í•¨ëœ í–‰ í™•ì¸
+        current_result_wooparoo = row[2].split()[-2]  # "ê²°ê³¼ìš°íŒŒë£¨" ì¶”ì¶œ
+        new_data.append(row)  # ì œëª© í–‰ì„ ê·¸ëŒ€ë¡œ ì¶”ê°€
     else:
-        # µ¥ÀÌÅÍ¸¦ ¼öÁ¤ÇÏ¿© '°á°ú¿ìÆÄ·ç È®·ü%' Ãß°¡
+        # ë°ì´í„°ë¥¼ ìˆ˜ì •í•˜ì—¬ 'ê²°ê³¼ìš°íŒŒë£¨ í™•ë¥ %' ì¶”ê°€
         new_row = [row[0], row[1], f"{current_result_wooparoo} {row[2]}"]
         new_data.append(new_row)
 
-# ¼öÁ¤µÈ µ¥ÀÌÅÍÇÁ·¹ÀÓ »ı¼º
+# ìˆ˜ì •ëœ ë°ì´í„°í”„ë ˆì„ ìƒì„±
 new_df = pd.DataFrame(new_data, columns=['Left', 'Right', 'Result Probability'])
 
-# ¼öÁ¤µÈ µ¥ÀÌÅÍÇÁ·¹ÀÓÀ» »õ·Î¿î CSV ÆÄÀÏ·Î ÀúÀå
+# ìˆ˜ì •ëœ ë°ì´í„°í”„ë ˆì„ì„ ìƒˆë¡œìš´ CSV íŒŒì¼ë¡œ ì €ì¥
 new_df.to_csv('modified_output.csv', index=False, encoding='utf-8-sig')
 
 print("end")

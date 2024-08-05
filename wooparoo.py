@@ -8,49 +8,66 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import time
 
-# ChromeDriver ¼³Á¤
+# ChromeDriver ì„¤ì¹˜ ë° ì„¤ì •
 service = Service(ChromeDriverManager().install())
 options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # ¹é±×¶ó¿îµå¿¡¼­ ½ÇÇà (ºê¶ó¿ìÀú Ã¢À» ¶ç¿ìÁö ¾ÊÀ½)
+options.add_argument("--headless")  # í—¤ë“œë¦¬ìŠ¤ ëª¨ë“œ (ë¸Œë¼ìš°ì € ì°½ì´ ëœ¨ì§€ ì•ŠìŒ)
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
 
-# À¥ µå¶óÀÌ¹ö ÃÊ±âÈ­
+# ì›¹ ë“œë¼ì´ë²„ ì´ˆê¸°í™”
 driver = webdriver.Chrome(service=service, options=options)
 
-# À¥ÆäÀÌÁö URL
+# ëŒ€ìƒ ì›¹ì‚¬ì´íŠ¸ URL
 url = 'https://wooparoo-odyssey.hangame.com/probability'
 driver.get(url)
 
-# ÆäÀÌÁö ·Îµå ´ë±â (ÇÊ¿ä½Ã Á¶Á¤)
+# í˜ì´ì§€ ë¡œë“œ ëŒ€ê¸° (í•„ìš”ì— ë”°ë¼ ì¡°ì •)
 time.sleep(5)
 
-# "5" ÆäÀÌÁö ¹öÆ°À» Å¬¸¯
-page_5_button = driver.find_element(By.XPATH, '//button[@aria-label="Go to page 5"]')
-page_5_button.click()
-time.sleep(2)  # ÆäÀÌÁö ·Îµå ´ë±â
+# "5" í˜ì´ì§€ ë²„íŠ¼ í´ë¦­
+try:
+    page_5_button = driver.find_element(By.XPATH, '//button[@aria-label="Go to page 5"]')
+    page_5_button.click()
+    time.sleep(2)  # í˜ì´ì§€ ë¡œë“œ ëŒ€ê¸°
+except NoSuchElementException:
+    print("Could not find the page 5 button")
+    driver.quit()
+    exit()
 
-# "´ÙÀ½" ¹öÆ°À» Å¬¸¯ÇÏ¿© 9¹ø ÆäÀÌÁö·Î ÀÌµ¿
+# "ë‹¤ìŒ" ë²„íŠ¼ì„ í´ë¦­í•˜ì—¬ 9í˜ì´ì§€ë¡œ ì´ë™
 for _ in range(4):
-    next_button = driver.find_element(By.XPATH, '//button[@aria-label="Go to next page"]')
-    next_button.click()
-    time.sleep(2)  # ÆäÀÌÁö ·Îµå ´ë±â
+    try:
+        next_button = driver.find_element(By.XPATH, '//button[@aria-label="Go to next page"]')
+        next_button.click()
+        time.sleep(2)  # í˜ì´ì§€ ë¡œë“œ ëŒ€ê¸°
+    except NoSuchElementException:
+        print("Could not find the next button")
+        driver.quit()
+        exit()
 
-# Ã¹ ¹øÂ° ¸µÅ©¸¦ Å¬¸¯ (16¹øÂ° ÀÎµ¦½ºÀÇ ¸µÅ©)
-first_link = driver.find_element(By.XPATH, '//table//tr[16]//td[1]//button')
-first_link.click()
-time.sleep(5)  # ÆäÀÌÁö ·Îµå ´ë±â (ÇÊ¿ä½Ã Á¶Á¤)
+# ì²« ë²ˆì§¸ ë§í¬ í´ë¦­ (16ë²ˆì§¸ í•­ëª©)
+try:
+    first_link = driver.find_element(By.XPATH, '//table//tr[16]//td[1]//button')
+    first_link.click()
+    time.sleep(5)  # í˜ì´ì§€ ë¡œë“œ ëŒ€ê¸°
+except NoSuchElementException:
+    print("Could not find the first link")
+    driver.quit()
+    exit()
 
-# µ¥ÀÌÅÍ¸¦ ÀúÀåÇÒ ¸®½ºÆ®
+# ë°ì´í„°ë¥¼ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸
 all_data = []
 
 index = 1
 while True:
     try:
-        # µÎ ¹øÂ° ¸µÅ© Å¬¸¯ (Å×ÀÌºíÀÇ Æ¯Á¤ ÀÎµ¦½ºÀÇ ¼¿)
+        # në²ˆì§¸ ë§í¬ í´ë¦­ (í…Œì´ë¸”ì˜ íŠ¹ì • í•­ëª©)
         second_link = driver.find_element(By.XPATH, f'//table//tr[{index}]//td[1]//button')
         second_link.click()
-        time.sleep(5)  # ÆäÀÌÁö ·Îµå ´ë±â (ÇÊ¿ä½Ã Á¶Á¤)
+        time.sleep(5)  # í˜ì´ì§€ ë¡œë“œ ëŒ€ê¸°
 
-        # µÎ ¹øÂ° ÆäÀÌÁöÀÇ µ¥ÀÌÅÍ¸¦ ÃßÃâ
+        # í˜„ì¬ í˜ì´ì§€ì˜ HTMLì„ íŒŒì‹±
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
         table = soup.find('table')
@@ -61,9 +78,9 @@ while True:
                 cells_text = [cell.get_text(strip=True) for cell in cells]
                 all_data.append(cells_text)
 
-        # µÚ·Î °¡±â
+        # ë’¤ë¡œ ê°€ê¸°
         driver.back()
-        time.sleep(5)  # ÆäÀÌÁö ·Îµå ´ë±â (ÇÊ¿ä½Ã Á¶Á¤)
+        time.sleep(5)  # í˜ì´ì§€ ë¡œë“œ ëŒ€ê¸°
 
         index += 1
 
@@ -74,27 +91,31 @@ while True:
         print(f"Error at index {index}: {e}")
         break
 
-# µå¶óÀÌ¹ö Á¾·á
+# ì›¹ ë“œë¼ì´ë²„ ì¢…ë£Œ
 driver.quit()
 
-# pandas DataFrameÀ¸·Î º¯È¯
+# pandas DataFrameìœ¼ë¡œ ë³€í™˜
 df = pd.DataFrame(all_data)
 
-# µ¥ÀÌÅÍ¸¦ ¼öÁ¤ÇÏ¿© ¼¼ ¹øÂ° ¿­¿¡ 'x ¿ìÆÄ·ç' Ãß°¡
+# ë°ì´í„°ë¥¼ ìˆ˜ì •í•˜ì—¬ í™•ë¥ % ì¶”ê°€ ë° ì¸ë±ìŠ¤ ë²ˆí˜¸ ì¶”ê°€
 new_data = []
-for index, row in df.iterrows():
-    left = row[0]
-    right = row[1]
-    probability = row[2]
+for i, row in df.iterrows():
+    if len(row) >= 3:
+        left = row[0]
+        right = row[1]
+        probability = row[2]
 
-    # 'x ¿ìÆÄ·ç' Ãß°¡
-    new_row = [left, right, f"{right} {probability}"]
-    new_data.append(new_row)
+        # 'í™•ë¥ %' ì¶”ê°€
+        if '%' in probability:
+            new_row = [i + 1, left, right, probability]  # ì¸ë±ìŠ¤ ë²ˆí˜¸ ì¶”ê°€
+        else:
+            new_row = [i + 1, left, right, f"{probability}%"]  # ì¸ë±ìŠ¤ ë²ˆí˜¸ ì¶”ê°€
+        new_data.append(new_row)
 
-# ¼öÁ¤µÈ µ¥ÀÌÅÍÇÁ·¹ÀÓ »ı¼º
-new_df = pd.DataFrame(new_data, columns=['Left', 'Right', 'Probability'])
+# ìˆ˜ì •ëœ ë°ì´í„°í”„ë ˆì„ ìƒì„±
+new_df = pd.DataFrame(new_data, columns=['Index', 'Left', 'Right', 'Probability'])
 
-# ¼öÁ¤µÈ µ¥ÀÌÅÍÇÁ·¹ÀÓÀ» CSV ÆÄÀÏ·Î ÀúÀå
-new_df.to_csv('modified_output.csv', index=False, encoding='utf-8-sig')
+# ìˆ˜ì •ëœ ë°ì´í„°í”„ë ˆì„ì„ CSV íŒŒì¼ë¡œ ì €ì¥
+new_df.to_csv('outputData.csv', index=False, encoding='utf-8-sig')
 
 print("completed")
