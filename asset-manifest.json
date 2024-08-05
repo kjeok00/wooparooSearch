@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/wooparooSearch/static/css/main.713f5b20.css",
-    "main.js": "/wooparooSearch/static/js/main.f17cea5f.js",
+    "main.js": "/wooparooSearch/static/js/main.cc02525d.js",
     "static/js/453.8eb55b48.chunk.js": "/wooparooSearch/static/js/453.8eb55b48.chunk.js",
     "index.html": "/wooparooSearch/index.html",
     "main.713f5b20.css.map": "/wooparooSearch/static/css/main.713f5b20.css.map",
-    "main.f17cea5f.js.map": "/wooparooSearch/static/js/main.f17cea5f.js.map",
+    "main.cc02525d.js.map": "/wooparooSearch/static/js/main.cc02525d.js.map",
     "453.8eb55b48.chunk.js.map": "/wooparooSearch/static/js/453.8eb55b48.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.713f5b20.css",
-    "static/js/main.f17cea5f.js"
+    "static/js/main.cc02525d.js"
   ]
 }
