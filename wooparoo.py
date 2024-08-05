@@ -34,8 +34,8 @@ for _ in range(4):
     next_button.click()
     time.sleep(2)  # 페이지 로드 대기
 
-# 첫 번째 링크를 클릭
-first_link = driver.find_element(By.XPATH, '//button[contains(text(), "2024-07-31 09:00:00")]')
+# 첫 번째 링크를 클릭 (16번째 인덱스의 링크)
+first_link = driver.find_element(By.XPATH, '//table//tr[16]//td[1]//button')
 first_link.click()
 time.sleep(5)  # 페이지 로드 대기 (필요시 조정)
 
@@ -80,7 +80,21 @@ driver.quit()
 # pandas DataFrame으로 변환
 df = pd.DataFrame(all_data)
 
-# CSV 파일로 저장
-df.to_csv('output.csv', index=False, encoding='utf-8-sig')
+# 데이터를 수정하여 세 번째 열에 'x 우파루' 추가
+new_data = []
+for index, row in df.iterrows():
+    left = row[0]
+    right = row[1]
+    probability = row[2]
+
+    # 'x 우파루' 추가
+    new_row = [left, right, f"{right} {probability}"]
+    new_data.append(new_row)
+
+# 수정된 데이터프레임 생성
+new_df = pd.DataFrame(new_data, columns=['Left', 'Right', 'Probability'])
+
+# 수정된 데이터프레임을 CSV 파일로 저장
+new_df.to_csv('modified_output.csv', index=False, encoding='utf-8-sig')
 
 print("completed")
