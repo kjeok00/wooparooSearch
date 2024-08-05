@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Papa from 'papaparse';
 import './App.css';
 
-const originalCsvFilePath = '/Original_sortedWooparooData.csv';
-const luckyCsvFilePath = '/Lucky_sortedWooparooData.csv';
+const originalCsvFilePath = `${process.env.PUBLIC_URL}/Original_sortedWooparooData.csv`;
+const luckyCsvFilePath = `${process.env.PUBLIC_URL}/Lucky_sortedWooparooData.csv`;
 
 function App() {
   const [data, setData] = useState([]);
@@ -11,10 +11,9 @@ function App() {
   const [right, setRight] = useState('');
   const [results, setResults] = useState([]);
   const [message, setMessage] = useState('');
-  const [isLucky, setIsLucky] = useState(false); // 추가된 상태
+  const [isLucky, setIsLucky] = useState(false);
 
   useEffect(() => {
-    // Fetch and parse the CSV file
     const csvFilePath = isLucky ? luckyCsvFilePath : originalCsvFilePath;
     fetch(csvFilePath)
       .then(response => {
@@ -34,7 +33,7 @@ function App() {
       .catch(error => {
         console.error('Error fetching the CSV file:', error);
       });
-  }, [isLucky]); // isLucky 상태가 변경될 때마다 실행
+  }, [isLucky]);
 
   const handleSearch = () => {
     console.log('버튼이 클릭되었습니다.');
@@ -57,7 +56,6 @@ function App() {
     } else {
       const filteredResults = data.filter(row => row.Left === left && row.Right === right);
       if (filteredResults.length > 0) {
-        // Probability 기준으로 내림차순 정렬
         filteredResults.sort((a, b) => parseFloat(b.Probability) - parseFloat(a.Probability));
         setResults(filteredResults);
         setMessage('');
@@ -72,8 +70,8 @@ function App() {
 
   const toggleLucky = () => {
     setIsLucky(!isLucky);
-    setResults([]); // 결과 값을 초기화
-    setMessage(''); // 메시지 초기화
+    setResults([]);
+    setMessage('');
   };
 
   return (
