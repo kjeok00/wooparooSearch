@@ -11,17 +11,20 @@
 
 ## 라이브러리
 
-- Selenium
+- **Selenium**
   - 웹페이지 작업 자동화
-- BeautifulSoup
+- **BeautifulSoup**
   - HTML, XML 데이터 추출
-- Pandas
+- **Pandas**
   - CSV 데이터 분석 및 조작
-- PapaParse
-  - CSV 파이릉ㄹ 파싱하여 JSON 데이터로 변환
-- React
+- **PapaParse**
+  - CSV 파일을 파싱하여 JSON 데이터로 변환
+- **React**
   - UI 구성 및 앱 개발
 
+<br>
+
+**사용영상**
 
 https://github.com/user-attachments/assets/b48a3e5e-f461-4d9c-b040-8d75e631d5f1
 
